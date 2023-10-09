@@ -6,8 +6,8 @@ provider "aws" {
   default_tags {
     tags = {
       Environment = terraform.workspace
-      Owner      = "Acme"
-      Provisoned = "Terraform"
+      Owner       = "Acme"
+      Provisoned  = "Terraform"
     }
   }
 }
@@ -308,13 +308,11 @@ resource "aws_instance" "web_server" {
 
 }
 
-
 output "public_ip" {
-  value = aws_instance.ubuntu_server.public_ip
+  value = module.server.public_ip
 }
-
 output "public_dns" {
-  value = aws_instance.ubuntu_server.public_dns
+  value = module.server.public_dns
 }
 
 output "public_ip_server_subnet_1" {
@@ -323,5 +321,30 @@ output "public_ip_server_subnet_1" {
 
 output "public_dns_server_subnet_1" {
   value = aws_instance.web_server.public_dns
+}
+
+
+
+
+module "server" {
+  source    = "./server"
+  ami       = data.aws_ami.ubuntu.id
+  subnet_id = aws_subnet.public_subnets["public_subnet_3"].id
+  security_groups = [
+    aws_security_group.vpc-ping.id,
+    aws_security_group.ingress-ssh.id,
+    aws_security_group.vpc-web.id
+  ]
+}
+
+module "server_subnet_1" {
+  source    = "./server"
+  ami       = data.aws_ami.ubuntu.id
+  subnet_id = aws_subnet.public_subnets["public_subnet_3"].id
+  security_groups = [
+    aws_security_group.vpc-ping.id,
+    aws_security_group.ingress-ssh.id,
+    aws_security_group.vpc-web.id
+  ]
 }
 
