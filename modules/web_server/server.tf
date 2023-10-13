@@ -7,17 +7,22 @@ variable "user" {}
 variable "security_groups" {
   type = list(any)
 }
+
 variable "key_name" {
+
 }
 variable "private_key" {
 }
+
 resource "aws_instance" "web" {
-  ami                         = var.ami
-  instance_type               = var.size
-  subnet_id                   = var.subnet_id
-  vpc_security_group_ids      = var.security_groups
+  ami                    = var.ami
+  instance_type          = var.size
+  subnet_id              = var.subnet_id
+  vpc_security_group_ids = var.security_groups
+
   associate_public_ip_address = true
-  key_name                    = var.key_name
+
+  key_name = var.key_name
   connection {
     user        = var.user
     private_key = var.private_key
