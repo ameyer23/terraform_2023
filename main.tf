@@ -1,3 +1,9 @@
+/*
+Name: IaC Buildout for Terraform Associate Exam
+Description: AWS Infrastructure Buildout
+Contributors: Bryan and Gabe
+*/
+
 # Configure the AWS Provider
 provider "aws" {
   region = "us-east-1"
@@ -299,16 +305,6 @@ resource "aws_instance" "web_server" {
 
 }
 
-# Terraform Resource Block - To Build EC2 instance in Public Subnet
-resource "aws_instance" "web_server_2" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
-  subnet_id     = aws_subnet.public_subnets["public_subnet_2"].id
-  tags = {
-    Name = "Web EC2 Server 2"
-  }
-}
-
 module "server" {
   source          = "./modules/server"
   ami             = data.aws_ami.ubuntu.id
@@ -335,6 +331,10 @@ output "public_dns" {
   value = module.server.public_dns
 }
 
+output "size" {
+  value = module.server.size
+}
+
 output "public_ip_server_subnet_1" {
   value = module.server_subnet_1.public_ip
 }
@@ -343,3 +343,12 @@ output "public_dns_server_subnet_1" {
   value = module.server_subnet_1.public_dns
 }
 
+# Terraform Resource Block - To Build EC2 instance in Public Subnet
+resource "aws_instance" "web_server_2" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t2.micro"
+  subnet_id     = aws_subnet.public_subnets["public_subnet_2"].id
+  tags = {
+    Name = "Web EC2 Server"
+  }
+}
